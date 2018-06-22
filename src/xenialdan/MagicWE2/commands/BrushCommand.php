@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace xenialdan\MagicWE2\commands;
 
+use DDSTech\CTForms\form\CustomForm;
+use DDSTech\CTForms\form\element\CustomFormElement;
+use DDSTech\CTForms\form\element\Dropdown;
+use DDSTech\CTForms\form\element\Input;
+use DDSTech\CTForms\form\element\Label;
+use DDSTech\CTForms\form\element\Slider;
+use DDSTech\CTForms\form\element\Toggle;
+use DDSTech\CTForms\form\Form;
+use DDSTech\CTPlayer;
 use pocketmine\command\CommandSender;
-use pocketmine\event\TranslationContainer;
-use pocketmine\form\CustomForm;
-use pocketmine\form\element\CustomFormElement;
-use pocketmine\form\element\Dropdown;
-use pocketmine\form\element\Input;
-use pocketmine\form\element\Label;
-use pocketmine\form\element\Slider;
-use pocketmine\form\element\Toggle;
-use pocketmine\form\Form;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\lang\TranslationContainer;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\IntTag;
@@ -45,7 +46,7 @@ class BrushCommand extends WECommand{
 		}
 		$lang = Loader::getInstance()->getLanguage();
 		try{
-			if ($sender instanceof Player){
+			if ($sender instanceof CTPlayer){
 				$sender->sendForm(
 					new class(Loader::$prefix . TextFormat::BOLD . TextFormat::DARK_PURPLE . $lang->translateString('ui.brush.title'), [
 							new Dropdown($lang->translateString('ui.brush.select.title'), [
@@ -53,7 +54,7 @@ class BrushCommand extends WECommand{
 								#$lang->translateString('ui.brush.select.type.cylinder'),
 								$lang->translateString('ui.brush.select.type.cuboid'),
 								$lang->translateString('ui.brush.select.type.clipboard')])]
-					) extends CustomForm{
+					) extends CustomForm {
 						private $options = [];
 
 						public function __construct($title, $elements, $options = []){
@@ -61,7 +62,11 @@ class BrushCommand extends WECommand{
 							parent::__construct($title, $elements);
 						}
 
-						public function onSubmit(Player $player): ?Form{
+						/**
+						 * @param CTPlayer $player
+						 * @return Form|null
+						 */
+						public function onSubmit($player): ?Form{
 							$lang = Loader::getInstance()->getLanguage();
 							/** @var Dropdown $dropdown */
 							$dropdown = $this->getElement(0);
@@ -84,7 +89,6 @@ class BrushCommand extends WECommand{
 											}
 
 											public function onSubmit(Player $player): ?Form{
-												$lang = Loader::getInstance()->getLanguage();
 												$item = ItemFactory::get(ItemIds::WOODEN_SHOVEL);
 												$item->addEnchantment(new EnchantmentInstance(Enchantment::getEnchantment(Enchantment::PROTECTION)));
 												$item->setCustomName(Loader::$prefix . TextFormat::BOLD . TextFormat::DARK_PURPLE . ucfirst($this->options['type']) . ' brush');
@@ -122,7 +126,6 @@ class BrushCommand extends WECommand{
 											}
 
 											public function onSubmit(Player $player): ?Form{
-												$lang = Loader::getInstance()->getLanguage();
 												$item = ItemFactory::get(ItemIds::WOODEN_SHOVEL);
 												$item->addEnchantment(new EnchantmentInstance(Enchantment::getEnchantment(Enchantment::PROTECTION)));
 												$item->setCustomName(Loader::$prefix . TextFormat::BOLD . TextFormat::DARK_PURPLE . ucfirst($this->options['type']) . ' brush');
@@ -162,7 +165,6 @@ class BrushCommand extends WECommand{
 											}
 
 											public function onSubmit(Player $player): ?Form{
-												$lang = Loader::getInstance()->getLanguage();
 												$item = ItemFactory::get(ItemIds::WOODEN_SHOVEL);
 												$item->addEnchantment(new EnchantmentInstance(Enchantment::getEnchantment(Enchantment::PROTECTION)));
 												$item->setCustomName(Loader::$prefix . TextFormat::BOLD . TextFormat::DARK_PURPLE . ucfirst($this->options['type']) . ' brush');
@@ -199,7 +201,6 @@ class BrushCommand extends WECommand{
 											}
 
 											public function onSubmit(Player $player): ?Form{
-												$lang = Loader::getInstance()->getLanguage();
 												$item = ItemFactory::get(ItemIds::WOODEN_SHOVEL);
 												$item->addEnchantment(new EnchantmentInstance(Enchantment::getEnchantment(Enchantment::PROTECTION)));
 												$item->setCustomName(Loader::$prefix . TextFormat::BOLD . TextFormat::DARK_PURPLE . ucfirst($this->options['type']) . ' brush');

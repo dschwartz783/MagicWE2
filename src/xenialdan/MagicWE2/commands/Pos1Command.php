@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace xenialdan\MagicWE2\commands;
 
 use pocketmine\command\CommandSender;
-use pocketmine\event\TranslationContainer;
+use pocketmine\lang\TranslationContainer;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\utils\TextFormat;
@@ -26,11 +26,10 @@ class Pos1Command extends WECommand{
 	public function execute(CommandSender $sender, string $commandLabel, array $args){
 		/** @var Player $sender */
 		$return = $sender->hasPermission($this->getPermission());
-		if (!$return){
+		if (!$return) {
 			$sender->sendMessage(new TranslationContainer(TextFormat::RED . "%commands.generic.permission"));
 			return true;
 		}
-		$lang = Loader::getInstance()->getLanguage();
 		try{
 			/** @var Session $session */
 			$session = API::getSession($sender);

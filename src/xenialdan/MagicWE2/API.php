@@ -19,7 +19,6 @@ use pocketmine\nbt\tag\NamedTag;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
-use xenialdan\MagicWE2\shape\Custom;
 use xenialdan\MagicWE2\shape\ShapeGenerator;
 use xenialdan\MagicWE2\task\AsyncFillTask;
 
@@ -175,7 +174,7 @@ class API{
 	 */
 	public static function fillAsync(Selection $selection, Session $session, $newblocks = [], ...$flagarray){
 		$flags = self::flagParser($flagarray);
-		Server::getInstance()->getScheduler()->scheduleAsyncTask(new AsyncFillTask($session->getPlayer(), $selection->__serialize(), $selection->getTouchedChunks(), $selection->getBlocks($flags), $newblocks, $flags));
+		Server::getInstance()->getAsyncPool()->submitTask(new AsyncFillTask($session->getPlayer(), $selection->__serialize(), $selection->getTouchedChunks(), $selection->getBlocks($flags), $newblocks, $flags));
 	}
 
 	/**
@@ -403,7 +402,6 @@ class API{
 				return false;
 			}
 		}
-		return false;
 	}
 
 	/**
@@ -424,8 +422,8 @@ class API{
 
 	public static function compoundToArray(CompoundTag $compoundTag){
 		$nbt = new LittleEndianNBTStream();
-		$nbt->setData($compoundTag);
-		return $nbt->getArray();
+		$nbt->write($compoundTag);
+		return $nbt->getIntArray();
 	}
 
 	public static function &addSession(Session $session){
@@ -507,7 +505,6 @@ class API{
 
 	public static function rotationMetaHelper(Block $block, $timesRotate = 1){
 		$meta = $block->getDamage();
-		$variant = $block->getVariant();
 		$rotation = [0, 0, 0, 0];
 		switch ($block->getId()){
 			case BlockIds::FURNACE:

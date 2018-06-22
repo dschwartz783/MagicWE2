@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace xenialdan\MagicWE2\commands;
 
+use DDSTech\CTForms\form\CustomForm;
+use DDSTech\CTForms\form\element\CustomFormElement;
+use DDSTech\CTForms\form\element\Dropdown;
+use DDSTech\CTForms\form\element\Input;
+use DDSTech\CTForms\form\element\Label;
+use DDSTech\CTForms\form\element\Slider;
+use DDSTech\CTForms\form\element\Toggle;
+use DDSTech\CTForms\form\Form;
+use DDSTech\CTPlayer;
 use pocketmine\command\CommandSender;
-use pocketmine\event\TranslationContainer;
-use pocketmine\form\CustomForm;
-use pocketmine\form\element\CustomFormElement;
-use pocketmine\form\element\Dropdown;
-use pocketmine\form\element\Input;
-use pocketmine\form\element\Label;
-use pocketmine\form\element\Slider;
-use pocketmine\form\element\Toggle;
-use pocketmine\form\Form;
 use pocketmine\item\enchantment\Enchantment;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
+use pocketmine\lang\TranslationContainer;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\StringTag;
@@ -43,7 +44,7 @@ class FloodCommand extends WECommand{
 		}
 		$lang = Loader::getInstance()->getLanguage();
 		try{
-			if ($sender instanceof Player){
+			if ($sender instanceof CTPlayer){
 				$sender->sendForm(
 					new class(Loader::$prefix . TextFormat::BOLD . TextFormat::DARK_PURPLE . $lang->translateString('ui.flood.title'), [
 							new Slider($lang->translateString('ui.flood.options.limit'), 100, 10000, 100.0, 1000.0),
@@ -51,7 +52,6 @@ class FloodCommand extends WECommand{
 							new Label($lang->translateString('ui.flood.options.label.infoapply'))]
 					) extends CustomForm{
 						public function onSubmit(Player $player): ?Form{
-							$lang = Loader::getInstance()->getLanguage();
 							$item = ItemFactory::get(ItemIds::BUCKET, 1);
 							$item->addEnchantment(new EnchantmentInstance(Enchantment::getEnchantment(Enchantment::PROTECTION)));
 							$item->setCustomName(Loader::$prefix . TextFormat::BOLD . TextFormat::DARK_PURPLE . 'Flood');
